@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="#" />
+    <link type="text/css" rel="styleSheet"  href="../static/css/login_main.css" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录Sfim</title>
+    <style>
+        .form .fa{
+            color: wheat;
+        }
+        @font-face {
+            font-family: 'neo';
+            src: url("../static/font/NEOTERICc.ttf");
+        }
+    </style>
+    <script type="text/javascript">
+        window.onload = function(){
+        var onoff = true//根据此布尔值判断当前为注册状态还是登录状态
+        var confirm = document.getElementsByClassName("confirm")[0]
+        //var user = document.getElementById("user")
+        //var passwd = document.getElementById("passwd")
+        //var con_pass = document.getElementById("confirm-passwd")
+
+        //自动居中title
+        var name_c = document.getElementById("title")
+        name = name_c.innerHTML.split("")
+        name_c.innerHTML = ""
+        for (i = 0; i < name.length; i++)
+            if (name[i] != ",")
+                name_c.innerHTML += "<i>" + name[i] + "</i>"
+        //引用hint()在最上方弹出提示
+        hint = function() {
+            let hit = document.getElementById("hint")
+            hit.style.display = "block"
+            setTimeout("hit.style.opacity = 1", 0)
+            setTimeout("hit.style.opacity = 0", 2000)
+            setTimeout('hit.style.display = "none"', 3000)
+        }
+        //回调函数
+        /*function submit(callback) {
+            //if (passwd.value == con_pass.value) {
+            let request = new XMLHttpRequest()
+            let url = ""
+            request.open("post", url, true)
+            let data = new FormData()
+            data.append("user", user.value)
+            data.append("passwd", passwd.value)
+            request.onreadystatechange = function() {
+                if (this.readyState == 4) {
+                    callback.call(this, this.response)
+                    //console.log(this.responseText)
+                }
+            }
+            request.send(data)
+        }*/
+        /*else {
+                   hit.innerHTML = "两次密码不同"
+                   hitting()
+               }
+           }*/
+        //注册按钮
+        signin = function() {
+            let hit = document.getElementById("hint").getElementsByTagName("p")[0]
+            let status = document.getElementById("status").getElementsByTagName("i")
+            let register_form = document.getElementById("register_block")
+            let login_form = document.getElementById("login_block")
+            if (onoff) {
+                status[0].style.top = 35 + "px"
+                status[1].style.top = 0
+                onoff = !onoff
+                document.title="注册您的Sfim帐号"
+                login_form.style="display: none"
+                register_form.style="display: block"
+            } else {
+                /*if (!/^[A-Za-z0-9]+$/.test(user.value))
+                    hit.innerHTML = "账号只能为英文和数字"
+                else if (user.value.length < 6)
+                    hit.innerHTML = "账号长度必须大于6位"
+                else if (passwd.value.length < 6)
+                    hit.innerHTML = "密码长度必须大于6位"
+                else if (passwd.value != con_pass.value)
+                    hit.innerHTML = "两次密码不相等"
+                else if (passwd.value = con_pass.value) {
+                    submit(function(res) {
+                        if (res == "exist")
+                            hit.innerHTML = "该账号已存在"
+                        else if (res == true) {
+                            hit.innerHTML = "账号注册成功，两秒后自动刷新页面"
+                            setTimeout("window.location.reload()", 2000)
+                        } else if (res == false)
+                            hit.innerHTML = "账号注册失败"
+                    })
+                }
+                hint()*/
+                var form = new FormData(document.getElementById("register_form"))
+                $.ajax(
+                    {
+                        type:"POST",
+                        data:form
+                    }
+                );
+            }
+        }
+        //登录按钮
+        login = function() {
+            if (onoff) {
+                /*let request = new XMLHttpRequest()
+                let url = ""
+                request.open("post", url, true)
+                let data = new FormData()
+                data.append("user", user.value)
+                data.append("passwd", passwd.value)
+                request.onreadystatechange = function() {
+                    if (this.readyState == 4) {
+                        if (this.responseText == false)
+                            hint()
+                        else
+                            window.location.href = this.responseText;
+                    }
+                }
+                request.send(data)*/
+                var form = new FormData(document.getElementById("login_form"))
+                $.ajax(
+                    {
+                        type:"POST",
+                        data:form
+                    }
+                );
+            } else {
+                let register_form = document.getElementById("register_block")
+                let login_form = document.getElementById("login_block")
+                let status = document.getElementById("status").getElementsByTagName("i")
+                status[0].style.top = 0
+                status[1].style.top = 35 + "px"
+                onoff = !onoff
+                document.title = "登录Sfim"
+                login_form.style="display: block"
+                register_form.style="display: none"
+            }
+        }
+    }
+    </script>
+</head>
+
+
+<body>
+    <div id="bg">
+        <div id="hint"><!-- 提示框 -->
+            <p>登录失败</p>
+        </div>
+        <div id="login_wrap">
+            <div id="login"><!-- 登录注册切换动画 -->
+                <div id="status">
+                    <i style="top: 0">Log</i>
+                    <i style="top: 35px">Sign</i>
+                    <i style="right: 5px">in</i>
+                </div>
+                <span>
+                    <div>
+                        <form method="POST" id="login_form">
+                        <div id="login_block" style="display: block">
+                        <p class="form">
+                            <i class="fa fa-envelope"></i>
+                            {{login_form.email(placeholder='email',id='email')}}
+                        </p>
+                        <p class="form">
+                            <i class="fa fa-lock"></i>
+                            {{login_form.password(placeholder='password',id='passwd')}}
+                        </p>
+                        <p>{{login_form.csrf_token}}</p>
+                        </div>
+                        <form method="POST" id="register_form">
+                        <div id="register_block" style="display: none">
+                        <p class="form">
+                            <i class="fa fa-envelope"></i>
+                            {{register_form.email(placeholder='email',id='email')}}
+                        </p>
+                        <p class="form">
+                            <i class="fa fa-user"></i>
+                            {{register_form.username(placeholder='username',id='user')}}
+                        </p>
+                        <p class="form">
+                            <i class="fa fa-lock"></i>
+                            {{register_form.password(placeholder='password',id='password')}}
+                        </p>
+                        <p class="form">
+                            <i class="fa fa-lock"></i>
+                            {{register_form.password(placeholder='confirm password',id='confirm-passwd')}}
+                        </p>
+                        <p>{{register_form.csrf_token}}</p>
+                        </div>
+                        <input type="button" class="btn" onclick="login()" style="margin-right: 20px;" value="Log in">
+                        <input type="button" class="btn" onclick="signin()" id="btn" value="Sign in">
+                        </form>
+                    </form>
+                </div>
+                    <a href="#">Forget your password?</a>
+                </span>
+            </div>
+
+            <div id="login_img"><!-- 图片绘制框 -->
+                <span class="circle">
+                </span>
+                <span class="star">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+                <span class="fly_star">
+                    <span></span>
+                    <span></span>
+                </span>
+                <p id="title">Sfim</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
