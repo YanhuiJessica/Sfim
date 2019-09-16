@@ -20,10 +20,10 @@
     <script type="text/javascript">
         window.onload = function(){
         var onoff = true//根据此布尔值判断当前为注册状态还是登录状态
-        var confirm = document.getElementsByClassName("confirm")[0]
-        //var user = document.getElementById("user")
-        //var passwd = document.getElementById("passwd")
-        //var con_pass = document.getElementById("confirm-passwd")
+        // var confirm = document.getElementsByClassName("confirm")[0]
+        var user = document.getElementById("user")
+        var passwd = document.getElementById("passwd")
+        var con_pass = document.getElementById("confirm-passwd")
 
         //自动居中title
         var name_c = document.getElementById("title")
@@ -36,9 +36,9 @@
         hint = function() {
             let hit = document.getElementById("hint")
             hit.style.display = "block"
-            setTimeout("hit.style.opacity = 1", 0)
-            setTimeout("hit.style.opacity = 0", 2000)
-            setTimeout('hit.style.display = "none"', 3000)
+            setTimeout(function(){ hit.style.opacity = 1 }, 0)
+            setTimeout(function(){ hit.style.opacity = 0 }, 2000)
+            setTimeout(function(){ hit.style.display = "none" }, 3000)
         }
         //回调函数
         /*function submit(callback) {
@@ -76,26 +76,24 @@
                 login_form.style="display: none"
                 register_form.style="display: block"
             } else {
-                /*if (!/^[A-Za-z0-9]+$/.test(user.value))
-                    hit.innerHTML = "账号只能为英文和数字"
-                else if (user.value.length < 6)
-                    hit.innerHTML = "账号长度必须大于6位"
+                if (/[^A-Za-z0-9\u4e00-\u9fa5]+/.test(user.value))
+                    hit.innerHTML = "用户名只能含有英文、数字或中文"
                 else if (passwd.value.length < 6)
                     hit.innerHTML = "密码长度必须大于6位"
                 else if (passwd.value != con_pass.value)
                     hit.innerHTML = "两次密码不相等"
-                else if (passwd.value = con_pass.value) {
-                    submit(function(res) {
-                        if (res == "exist")
-                            hit.innerHTML = "该账号已存在"
-                        else if (res == true) {
-                            hit.innerHTML = "账号注册成功，两秒后自动刷新页面"
-                            setTimeout("window.location.reload()", 2000)
-                        } else if (res == false)
-                            hit.innerHTML = "账号注册失败"
-                    })
-                }
-                hint()*/
+                // else if (passwd.value = con_pass.value) {
+                //     submit(function(res) {
+                //         if (res == "exist")
+                //             hit.innerHTML = "该账号已存在"
+                //         else if (res == true) {
+                //             hit.innerHTML = "账号注册成功，两秒后自动刷新页面"
+                //             setTimeout("window.location.reload()", 2000)
+                //         } else if (res == false)
+                //             hit.innerHTML = "账号注册失败"
+                //     })
+                // }
+                hint()
                 var form = new FormData(document.getElementById("register_form"))
                 $.ajax(
                     {
