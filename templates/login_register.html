@@ -16,15 +16,37 @@
             font-family: 'neo';
             src: url("../static/font/NEOTERICc.ttf");
         }
+        .vali_pass {
+            width: 350px;
+            margin: 0 auto;
+            padding: 10px;
+            border: #eee 1px solid;
+            text-align: center;
+        }
+        .vali_pass input {
+            width: 96%;
+            display: block;
+            margin: 0;
+            padding: 5px;
+            font-size: 14px;
+            line-height: 20px;
+        }
+        .vali_pass_progress {
+            margin-top: -2px;
+            background-color: transparent;
+            height: 2px;
+            border-radius: 5px;
+            margin-left: 17px;
+        }
+        .vali_pass_inner_progress {
+            display: block;
+            height: 100%;
+            border-radius: 5px;
+            width: 100%;
+        }
     </style>
     <script type="text/javascript">
         window.onload = function(){
-        var onoff = true//根据此布尔值判断当前为注册状态还是登录状态
-        // var confirm = document.getElementsByClassName("confirm")[0]
-        var user = document.getElementById("user")
-        var passwd = document.getElementById("passwd")
-        var con_pass = document.getElementById("confirm-passwd")
-
         //自动居中title
         var name_c = document.getElementById("title")
         name = name_c.innerHTML.split("")
@@ -32,115 +54,19 @@
         for (i = 0; i < name.length; i++)
             if (name[i] != ",")
                 name_c.innerHTML += "<i>" + name[i] + "</i>"
-        //引用hint()在最上方弹出提示
-        hint = function() {
-            let hit = document.getElementById("hint")
-            hit.style.display = "block"
-            setTimeout(function(){ hit.style.opacity = 1 }, 0)
-            setTimeout(function(){ hit.style.opacity = 0 }, 2000)
-            setTimeout(function(){ hit.style.display = "none" }, 3000)
+
+        function hint() {
+        let hit = document.getElementById("hint")
+        hit.style.display = "block"
+        setTimeout(function(){ hit.style.opacity = 1 }, 0)
+        setTimeout(function(){ hit.style.opacity = 0 }, 2000)
+        setTimeout(function(){ hit.style.display = "none" }, 3000)
         }
-        //回调函数
-        /*function submit(callback) {
-            //if (passwd.value == con_pass.value) {
-            let request = new XMLHttpRequest()
-            let url = ""
-            request.open("post", url, true)
-            let data = new FormData()
-            data.append("user", user.value)
-            data.append("passwd", passwd.value)
-            request.onreadystatechange = function() {
-                if (this.readyState == 4) {
-                    callback.call(this, this.response)
-                    //console.log(this.responseText)
-                }
-            }
-            request.send(data)
-        }*/
-        /*else {
-                   hit.innerHTML = "两次密码不同"
-                   hitting()
-               }
-           }*/
-        //注册按钮
-        signin = function() {
-            let hit = document.getElementById("hint").getElementsByTagName("p")[0]
-            let status = document.getElementById("status").getElementsByTagName("i")
-            let register_form = document.getElementById("register_block")
-            let login_form = document.getElementById("login_block")
-            if (onoff) {
-                status[0].style.top = 35 + "px"
-                status[1].style.top = 0
-                onoff = !onoff
-                document.title="注册您的Sfim帐号"
-                login_form.style="display: none"
-                register_form.style="display: block"
-            } else {
-                if (/[^A-Za-z0-9\u4e00-\u9fa5]+/.test(user.value))
-                    hit.innerHTML = "用户名只能含有英文、数字或中文"
-                else if (passwd.value.length < 6)
-                    hit.innerHTML = "密码长度必须大于6位"
-                else if (passwd.value != con_pass.value)
-                    hit.innerHTML = "两次密码不相等"
-                // else if (passwd.value = con_pass.value) {
-                //     submit(function(res) {
-                //         if (res == "exist")
-                //             hit.innerHTML = "该账号已存在"
-                //         else if (res == true) {
-                //             hit.innerHTML = "账号注册成功，两秒后自动刷新页面"
-                //             setTimeout("window.location.reload()", 2000)
-                //         } else if (res == false)
-                //             hit.innerHTML = "账号注册失败"
-                //     })
-                // }
-                hint()
-                var form = new FormData(document.getElementById("register_form"))
-                $.ajax(
-                    {
-                        type:"POST",
-                        data:form
-                    }
-                );
-            }
+
+        var hitt = document.getElementById('hint').getElementsByTagName("p")[0];
+        hitt.innerHTML = '{{message}}';
+        hint();
         }
-        //登录按钮
-        login = function() {
-            if (onoff) {
-                /*let request = new XMLHttpRequest()
-                let url = ""
-                request.open("post", url, true)
-                let data = new FormData()
-                data.append("user", user.value)
-                data.append("passwd", passwd.value)
-                request.onreadystatechange = function() {
-                    if (this.readyState == 4) {
-                        if (this.responseText == false)
-                            hint()
-                        else
-                            window.location.href = this.responseText;
-                    }
-                }
-                request.send(data)*/
-                var form = new FormData(document.getElementById("login_form"))
-                $.ajax(
-                    {
-                        type:"POST",
-                        data:form
-                    }
-                );
-            } else {
-                let register_form = document.getElementById("register_block")
-                let login_form = document.getElementById("login_block")
-                let status = document.getElementById("status").getElementsByTagName("i")
-                status[0].style.top = 0
-                status[1].style.top = 35 + "px"
-                onoff = !onoff
-                document.title = "登录Sfim"
-                login_form.style="display: block"
-                register_form.style="display: none"
-            }
-        }
-    }
     </script>
 </head>
 
@@ -159,7 +85,7 @@
                 </div>
                 <span>
                     <div>
-                        <form method="POST" id="login_form">
+                        <form method="POST" action="/login_register/" id="login_form">
                         <div id="login_block" style="display: block">
                         <p class="form">
                             <i class="fa fa-envelope"></i>
@@ -170,12 +96,15 @@
                             {{login_form.password(placeholder='password',id='passwd')}}
                         </p>
                         <p>{{login_form.csrf_token}}</p>
+                        {{login_form.login_sub(value="Log in",class='btn', id="login_sub",style="margin-right: 20px; display: inline-block")}}
+                        <input type="button" class="btn" onclick="signin()" style="display: inline-block" id="signin_btn" value="Sign in">
                         </div>
-                        <form method="POST" id="register_form">
+                        </form>
+                        <form method="POST" action="/login_register/" id="register_form">
                         <div id="register_block" style="display: none">
                         <p class="form">
                             <i class="fa fa-envelope"></i>
-                            {{register_form.email(placeholder='email',id='email')}}
+                            {{register_form.email(placeholder='email',id='mail')}}
                         </p>
                         <p class="form">
                             <i class="fa fa-user"></i>
@@ -183,18 +112,20 @@
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
-                            {{register_form.password(placeholder='password',id='password')}}
+                            {{register_form.password(onkeyup='PassStrong()', placeholder='password',id='password')}}
+                            <div class="vali_pass_progress">
+                                <div class="vali_pass_inner_progress"></div>
+                            </div>
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
                             {{register_form.password(placeholder='confirm password',id='confirm-passwd')}}
                         </p>
                         <p>{{register_form.csrf_token}}</p>
+                        <input type="button" class="btn" onclick="login()" id="login_btn" style="margin-right: 20px; display: inline-block" value="Log in">
+                        {{register_form.signin_sub( class="btn",style="display: inline-block",id="signin_sub",value="Sign in")}}
                         </div>
-                        <input type="button" class="btn" onclick="login()" style="margin-right: 20px;" value="Log in">
-                        <input type="button" class="btn" onclick="signin()" id="btn" value="Sign in">
                         </form>
-                    </form>
                 </div>
                     <a href="#">Forget your password?</a>
                 </span>
@@ -222,4 +153,79 @@
         </div>
     </div>
 </body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+    var onoff = true//根据此布尔值判断当前为注册状态还是登录状态
+    // var confirm = document.getElementsByClassName("confirm")[0]
+    var mail = document.getElementById("mail")
+    var user = document.getElementById("user")
+    var passwd = document.getElementById("passwd")
+    var password = document.getElementById("password")
+    var con_pass = document.getElementById("confirm-passwd")
+
+    //引用hint()在最上方弹出提示
+    function hint() {
+        let hit = document.getElementById("hint")
+        hit.style.display = "block"
+        setTimeout(function(){ hit.style.opacity = 1 }, 0)
+        setTimeout(function(){ hit.style.opacity = 0 }, 2000)
+        setTimeout(function(){ hit.style.display = "none" }, 3000)
+    }
+
+    //注册按钮
+    function signin() {
+        let hit = document.getElementById("hint").getElementsByTagName("p")[0]
+        let status = document.getElementById("status").getElementsByTagName("i")
+        let register_form = document.getElementById("register_block")
+        let login_form = document.getElementById("login_block")
+        if (onoff) {
+            status[0].style.top = 35 + "px"
+            status[1].style.top = 0
+            onoff = !onoff
+            document.title="注册您的Sfim帐号"
+            login_form.style="display: none"
+            register_form.style="display: inline-block"
+        }
+    }
+    //登录按钮
+    function login() {
+        if(!onoff)
+        {
+            let register_form = document.getElementById("register_block")
+            let login_form = document.getElementById("login_block")
+            let status = document.getElementById("status").getElementsByTagName("i")
+            status[0].style.top = 0
+            status[1].style.top = 35 + "px"
+            onoff = !onoff
+            document.title = "登录Sfim"
+            login_form.style="display: block"
+            register_form.style="display: none"
+        }
+    }
+
+    function PassStrong(){
+        var input_pass = document.getElementById('password').value
+        var input_progress = document.getElementsByClassName("vali_pass_inner_progress")[0]
+        var regxs = []
+        regxs.push(/[^a-zA-Z0-9_]/g)
+        regxs.push(/[a-zA-Z]/g)
+        regxs.push(/[0-9]/g)
+        var sec = 0
+        if(input_pass.length >= 6){ //密码长度至少为6位
+            for (var i = 0; i < regxs.length; i++){
+                if(input_pass.match(regxs[i])){
+                    sec++;
+                }
+            }
+        }
+        var result = (sec / regxs.length) * 100
+        input_progress.style.width = result + '%'
+        if(result > 0 && result <= 50)
+            input_progress.className = 'vali_pass_inner_progress error'
+        else if(result > 50 && result < 100)
+            input_progress.className = 'vali_pass_inner_progress middle'
+        else
+            input_progress.className = 'vali_pass_inner_progress strong'
+    }
+</script>
 </html>

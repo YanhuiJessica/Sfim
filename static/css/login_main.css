@@ -15,6 +15,17 @@ body {
 input:focus{
 	outline: none;
 }
+
+.error {
+    background-color: #ff3300;
+}
+.middle {
+    background-color: rgb(248, 212, 7);
+}
+.strong {
+    background-color: rgb(18, 194, 18);
+}
+
 .form input{
 	width: 300px;
 	height: 30px;
