@@ -21,6 +21,10 @@ class User(UserMixin, db.Model):
 		return cls.query.filter_by(**kwargs).first()
 
 	@classmethod
+	def del_by(cls, **kwargs):
+		return cls.query.filter_by(**kwargs).delete()
+
+	@classmethod
 	def send_verify_email(cls, name, email, token, authcode):
 		import requests, json
 
@@ -39,15 +43,13 @@ class User(UserMixin, db.Model):
                 })})
 
 	@classmethod
-	def generate_verify_token(cls, name, mail):
+	def generate_verify_authcode(cls):
 		import string, random
-		from hashlib import md5
 
-		token = md5(("%s%s"%(name,mail)).encode('utf-8')).hexdigest()
 		char_set = list(string.digits + string.ascii_letters)
         random.shuffle(char_set)
 		authcode = "".join(char_set[:authlen])
-		return token, authcode
+		return authcode
 
 	@classmethod
 	def isVaild(cls, template_time_id, compare_time):
@@ -62,12 +64,29 @@ class User(UserMixin, db.Model):
             return False
 
 	@classmethod
+	def verify_email(cls, token, authcode):
+		user = User.get_by(token = token)
+		if(user is None):
+			return 1
+		elif(user.verification_status == 1):
+			return 2
+		elif(not isVaild(0, user.create_time)):
+			User.del_by(token = token)
+			return 3
+		elif(user.authcode != authcode or not isVaild(1, user.generate_time)):
+			return 4
+		else:
+			user.verification_status = 1
+			return 0
+
+	@classmethod
 	def create_user(cls, mail, name, password, hashword):
 		import secret
-        from hashlib import sha256
+        from hashlib import sha256, md5
 
 		user = User.get_by(mail = mail)
 		assert user is None, '填写的注册邮箱已存在'
-		token, authcode = User.generate_verify_token(name, mail)
+		token = md5(("%s%s"%(name,mail)).encode('utf-8')).hexdigest()
+		authcode = User.generate_verify_authcode()
 		assert User.send_verify_email(name, mail, token, authcode).status_code == 200, \
 			"验证邮件发送失败"
