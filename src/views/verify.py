@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect, request, url_for
-from models import User
+from models.user import User
 
 verify = Blueprint('verify', __name__)
 

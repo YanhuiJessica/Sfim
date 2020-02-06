@@ -89,46 +89,50 @@
                         <div id="login_block" style="display: block">
                         <p class="form">
                             <i class="fa fa-envelope"></i>
-                            {{login_form.email(placeholder='email',id='email')}}
+                            {{login_form.email(placeholder=' 邮  箱',id='email')}}
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
-                            {{login_form.password(placeholder='password',id='passwd')}}
+                            {{login_form.password(placeholder=' 密  码',id='passwd')}}
                         </p>
                         <p>{{login_form.csrf_token}}</p>
-                        {{login_form.login_sub(value="Log in",class='btn', id="login_sub",style="margin-right: 20px; display: inline-block")}}
-                        <input type="button" class="btn" onclick="signin()" style="display: inline-block" id="signin_btn" value="Sign in">
+                        {{login_form.login_sub(value="登   录",class='btn', id="login_sub",style="margin-right: 20px; display: inline-block")}}
+                        <input type="button" class="btn" onclick="signin()" style="display: inline-block" id="signin_btn" value="注   册">
                         </div>
                         </form>
                         <form method="post" action="/login_register/" id="register_form">
                         <div id="register_block" style="display: none">
                         <p class="form">
                             <i class="fa fa-envelope"></i>
-                            {{register_form.email(placeholder='email',id='mail')}}
+                            {{register_form.email(placeholder=' 邮  箱',id='mail')}}
                         </p>
                         <p class="form">
                             <i class="fa fa-user"></i>
-                            {{register_form.username(placeholder='username',id='user')}}
+                            {{register_form.username(placeholder=' 用  户  名',id='user')}}
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
-                            {{register_form.password(onclick='PassStrong()', onkeyup='PassStrong()', placeholder='password',id='password')}}
+                            {{register_form.password(onclick='PassStrong()', onkeyup='PassStrong()', placeholder=' 密  码',id='password')}}
                             <div class="vali_pass_progress">
                                 <div class="vali_pass_inner_progress"></div>
                             </div>
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
-                            {{register_form.confirm_password(placeholder='confirm password',id='confirm-passwd')}}
+                            {{register_form.confirm_password(placeholder=' 确  认  密  码',id='confirm-passwd')}}
                         </p>
                         <p>{{register_form.csrf_token}}</p>
-                        <input type="button" class="btn" onclick="login()" id="login_btn" style="margin-right: 20px; display: inline-block" value="Log in">
-                        {{register_form.signin_sub( class="btn",style="display: inline-block",id="signin_sub",value="Sign in")}}
+                        <input type="button" class="btn" onclick="login()" id="login_btn" style="margin-right: 20px; display: inline-block" value="登   录">
+                        {{register_form.signin_sub( class="btn",style="display: inline-block",id="signin_sub",value="注   册")}}
                         </div>
                         </form>
                 </div>
-                    <a href="#">Forget your password?</a>
-                </span>
+                <div style="text-align: right;">
+                    <a href="#" id="help-left" style="margin-top: 50px; display:inline-block;"><u>未收到激活邮件</u></a>
+                    &nbsp; &nbsp;
+                    <a href="#" id="help-right" style="margin-top: 50px; display:inline-block;"><u>忘记密码</u></a>
+                </div>
+            </span>
             </div>
 
             <div id="login_img"><!-- 图片绘制框 -->

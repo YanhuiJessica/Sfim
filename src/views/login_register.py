@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, redirect
-from forms import RegisterForm,LoginForm
+from forms import RegisterForm, LoginForm
 import re, logging
 from flask import current_app as app
 
@@ -15,10 +15,22 @@ def post_login_register():
     login_form = LoginForm()
     signin_form = RegisterForm()
 
+    # http://www.pythondoc.com/flask-login/#flask-login
     if(login_form.login_sub.data):
         try:
+            from passlib.hash import argon2
+
             assert login_form.validate_on_submit(), '无效填写'
             email = login_form.email.data
+            user = User.get_by(mail=email)
+            assert user, "该用户不存在"
+            saved = user.hashword
+            password = login_form.password.data
+            check_status = argon2.verify(password, saved)
+            assert check_status, "邮箱或密码输入错误"
+            assert user.verification_status == 1 or User.isValid(0, user.create_time), \
+                User.del_by(token=user.token) and "注册失败！您需要重新注册"
+            assert user.verification_status == 1, "尚未激活账户，请前往邮箱激活"
         except AssertionError as e:
             message = e.args[0] if len(e.args) else str(e)
 
