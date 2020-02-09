@@ -16,6 +16,11 @@ input:focus{
 	outline: none;
 }
 
+@font-face {
+    font-family: 'Xiao Wei';
+    src: url("../font/xiaowei.otf")
+}
+
 .error {
     background-color: #ff3300;
 }

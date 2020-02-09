@@ -96,8 +96,8 @@
                             {{login_form.password(placeholder=' 密  码',id='passwd')}}
                         </p>
                         <p>{{login_form.csrf_token}}</p>
-                        {{login_form.login_sub(value="登   录",class='btn', id="login_sub",style="margin-right: 20px; display: inline-block")}}
-                        <input type="button" class="btn" onclick="signin()" style="display: inline-block" id="signin_btn" value="注   册">
+                        {{login_form.login_sub(value="登   录",class='btn', id="login_sub",style="margin-right: 20px; display: inline-block; font-family: 'Xiao Wei'")}}
+                        <input type="button" class="btn" onclick="signin()" style="display: inline-block; font-family: 'Xiao Wei'" id="signin_btn" value="注   册">
                         </div>
                         </form>
                         <form method="post" action="/login_register/" id="register_form">
@@ -122,15 +122,15 @@
                             {{register_form.confirm_password(placeholder=' 确  认  密  码',id='confirm-passwd')}}
                         </p>
                         <p>{{register_form.csrf_token}}</p>
-                        <input type="button" class="btn" onclick="login()" id="login_btn" style="margin-right: 20px; display: inline-block" value="登   录">
-                        {{register_form.signin_sub( class="btn",style="display: inline-block",id="signin_sub",value="注   册")}}
+                        <input type="button" class="btn" onclick="login()" id="login_btn" style="margin-right: 20px; display: inline-block; font-family: 'Xiao Wei'" value="登   录">
+                        {{register_form.signin_sub( class="btn",style="display: inline-block; font-family: 'Xiao Wei'",id="signin_sub",value="注   册")}}
                         </div>
                         </form>
                 </div>
                 <div style="text-align: right;">
-                    <a href="#" id="help-left" style="margin-top: 50px; display:inline-block;"><u>未收到激活邮件</u></a>
+                    <a href="#" id="help-left" style="margin-top: 50px; display:inline-block; font-family: 'Xiao Wei'"><u>未收到激活邮件</u></a>
                     &nbsp; &nbsp;
-                    <a href="#" id="help-right" style="margin-top: 50px; display:inline-block;"><u>忘记密码</u></a>
+                    <a href="#" id="help-right" style="margin-top: 50px; display:inline-block; font-family: 'Xiao Wei'"><u>忘记密码</u></a>
                 </div>
             </span>
             </div>
