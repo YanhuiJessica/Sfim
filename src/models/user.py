@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, VARBINARY
 from sqlalchemy import CHAR, DateTime, TIMESTAMP, text
 from sqlalchemy.dialects.mysql import INTEGER, TINYINT
 from sqlalchemy.sql import func
@@ -29,6 +29,9 @@ class User(UserMixin, db.Model):
 	verification_status = Column(TINYINT(1),nullable=False,server_default=text("'0'"))
 	create_time = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
 	generate_time = Column(TIMESTAMP, server_default=text("current_timestamp()"))
+	pubkey = Column(VARBINARY(255), nullable=False, server_default=text("''"))
+	privkey = Column(VARBINARY(1023), nullable=False, server_default=text("''"))
+	symkey = Column(VARBINARY(255), nullable=False, server_default=text("''"))
 
 	@classmethod
 	def get_by(cls, **kwargs):
@@ -43,7 +46,7 @@ class User(UserMixin, db.Model):
 		import requests, json
 
 		return requests.post(
-		"https://api.mailgun.net/v3/" + domain_name + "/messages",
+		"https://api.mailgun.net/v3/mg." + domain_name + "/messages",
 		auth=("api", api_key),
 		data={"from": "Sfim <mail@" + domain_name + ">",
 			"to": "New Sfimer <" + email + ">",
@@ -104,8 +107,18 @@ class User(UserMixin, db.Model):
 		authcode = User.generate_verify_authcode()
 		assert User.send_verify_email(name, mail, token, authcode).status_code == 200, \
 			"验证邮件发送失败"
-		user = User(usrname=name, hashword=hashword,
-					mail=mail,token=token,authcode = authcode
-					)
+
+		# 随机生成一个用户的对称密钥与公私钥
+		symmetric_key = secret.new_symmetric_key()
+		private_key, public_key = secret.new_pair()
+		# 用用户的密码对用户的私钥加密（对称加密）
+		digest = sha256(password.encode('utf-8')).hexdigest()
+		encrypted_prikey = secret.symmetric_encrypt(bytes.fromhex(digest), private_key)
+		# 对对称密钥加密
+		encrypted_symkey = secret.encrypt(private_key, symmetric_key)
+		user = User(usrname = name, hashword = hashword,
+					mail = mail, token = token, authcode = authcode,
+					symkey = encrypted_symkey, privkey = encrypted_prikey,
+					pubkey = public_key)
 		db.session.add(user)
 		db.session.commit()
