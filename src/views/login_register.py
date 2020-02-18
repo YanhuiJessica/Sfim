@@ -12,6 +12,8 @@ def get_login_register():
 
 @login_register.route('/', methods=['POST'])
 def post_login_register():
+    from models import User
+
     login_form = LoginForm()
     signin_form = RegisterForm()
 
