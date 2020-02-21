@@ -1,10 +1,11 @@
 import logging
 from views import *
 
-from flask import Flask, render_template
+from flask import render_template
 
 if __name__ == '__main__':
-    app = Flask(__name__)
+    from database import create_app
+    app = create_app(__name__)
 
     from config import csrf_key
     app.secret_key = csrf_key
@@ -19,4 +20,4 @@ if __name__ == '__main__':
     #Level: DEBUG < INFO < WARING < ERROR < CRITICAL
     #大于等于设置Level级别的日志记录会被输出
 
-    app.run(host="192.168.1.109", port=8080)
+    app.run(host="192.168.1.114", port=8080)
