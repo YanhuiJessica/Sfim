@@ -1,4 +1,4 @@
-from nacl.public import PrivateKey
+from nacl.public import PrivateKey, SealedBox
 from nacl.secret import SecretBox
 from nacl.utils import random
 
@@ -24,3 +24,19 @@ def symmetric_encrypt(key: bytes, plaintext: bytes):
     # 密文结构 cipher + '$$$' + iv
     ciphertext = ct + b'$$$' + iv
     return ciphertext
+
+def symmetric_decrypt(key:bytes, ciphertext:bytes):
+    ct, iv = ciphertext.rsplit(b'$$$')
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=default_backend())
+    decryptor = cipher.decryptor()
+    padded_plaintext = decryptor.update(ct) + decryptor.finalize()
+    unpadder = padding.PKCS7(128).unpadder()
+    unpadded_plaintext = unpadder.update(padded_plaintext)
+    unpadded_plaintext += unpadder.finalize()
+    return unpadded_plaintext
+
+def encrypt(sk:bytes, plaintext: bytes):
+    return SealedBox(PrivateKey(sk).public_key).encrypt(plaintext)
+
+def decrypt(sk:bytes, ciphertext: bytes):
+    return SealedBox(PrivateKey(sk)).decrypt(ciphertext)

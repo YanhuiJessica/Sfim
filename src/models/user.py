@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
 			"o:tag": ['Sfim', 'Verify Email'],
 			"h:X-Mailgun-Variables": json.dumps({
 				"name": name,
-					"verify_link": "http://" + domain_name + "/verify?token=" + token + \
+					"verify_link": "http://www." + domain_name + "/verify?token=" + token + \
 					"&authcode=" + authcode
 				})})
 
@@ -87,10 +87,10 @@ class User(UserMixin, db.Model):
 			return 1
 		elif(user.verification_status == 1):
 			return 2
-		elif(not isVaild(0, user.create_time)):
+		elif(not cls.isVaild(0, user.create_time)):
 			User.del_by(token = token)
 			return 3
-		elif(user.authcode != authcode or not isVaild(1, user.generate_time)):
+		elif(user.authcode != authcode or not cls.isVaild(1, user.generate_time)):
 			return 4
 		else:
 			user.verification_status = 1
