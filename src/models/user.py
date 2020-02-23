@@ -69,6 +69,12 @@ class User(UserMixin, db.Model):
 		return authcode
 
 	@classmethod
+	def link_refresh(cls, token):
+		user = User.get_by(token = token)
+		authcode = cls.generate_verify_authcode()
+		return cls.send_verify_email(user.name, user.email, token, authcode).status_code == 200
+
+	@classmethod
 	def isVaild(cls, template_time_id, compare_time):
 		# 判断是否在有效激活时间内或链接是否有效
 		import datetime

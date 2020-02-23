@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, url_for
 from forms import RegisterForm, LoginForm
 import re, logging
 from flask import current_app as app
+from flask_login import login_user
 
 login_register = Blueprint('login_register',__name__)
 username_pattern = re.compile(r'[\u4e00-\u9fa5a-zA-Z0-9_]+')
@@ -33,8 +34,11 @@ def post_login_register():
             assert user.verification_status == 1 or User.isValid(0, user.create_time), \
                 User.del_by(token=user.token) and "注册失败！您需要重新注册"
             assert user.verification_status == 1, "尚未激活账户，请前往邮箱激活"
+            return redirect(url_for('home.index'))
         except AssertionError as e:
             message = e.args[0] if len(e.args) else str(e)
+            return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
+                message = message)
 
     if(signin_form.signin_sub.data):
         try:
@@ -48,6 +52,7 @@ def post_login_register():
             assert len(password) >= 6, '密码长度至少为6位'
             assert password == confirm_passwd, '两次密码不相等'
             hash_password = signin_form.get_password_hash()
+            User.create_user(email, user, password, hash_password)
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
                 message = "注册成功！离使用 Sfim 只差一步！请前往邮箱激活您的账户。")
         except AssertionError as e:
