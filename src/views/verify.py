@@ -41,8 +41,8 @@ def retry():
     return render_template('verify.html',title='激活失败！',msg='链接已失效。已将新链接发送至您的邮箱，请注意查收邮件。')
 
 @verify.route('/efail')
-def fail():
-    return render_template('verify.html',title='Ooops！',msg='包含有新链接的邮件发送失败，您可以回到登录界面点击「未收到激活邮件」，再次发送。')
+def efail():
+    return render_template('verify.html',title='Ooops！',msg='包含有新链接的邮件发送失败，您可以回到登录界面点击「未收到激活邮件」，再次发送激活邮件。')
 
 @verify.route('/fail')
 def fail():
