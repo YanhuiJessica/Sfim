@@ -4,18 +4,11 @@ from sqlalchemy.dialects.mysql import INTEGER, TINYINT
 from sqlalchemy.sql import func
 from database import db
 from flask_login import LoginManager, UserMixin
-from config import api_key, domain_name
+from config import api_key, domain_name, authlen
+from config import verify_available_time_in_second, link_available_time_in_second
 
 # mail support - Mailgun
 # templating language - Handlebars
-
-# authcode 长度
-authlen = 25
-
-# 用户应在自注册起 24 小时内完成邮箱验证
-verify_available_time_in_second = 86400
-# 单个验证链接的有效时间为 10 分钟
-link_available_time_in_second = 600
 
 class User(UserMixin, db.Model):
 	__tablename__ = 'users'
