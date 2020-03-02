@@ -1,19 +1,22 @@
 from flask import Blueprint, render_template, redirect, url_for
 from forms import RegisterForm, LoginForm
-import re, logging
+import re, logging, secret
 from flask import current_app as app
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 login_register = Blueprint('login_register',__name__)
 username_pattern = re.compile(r'[\u4e00-\u9fa5a-zA-Z0-9_]+')
 
 @login_register.route('/')
 def get_login_register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+
     return render_template('login_register.html',login_form=LoginForm(),register_form=RegisterForm())
 
 @login_register.route('/', methods=['POST'])
 def post_login_register():
-    from models import User
+    from models import User, OnlineUser
 
     login_form = LoginForm()
     signin_form = RegisterForm()
@@ -21,6 +24,8 @@ def post_login_register():
     # http://www.pythondoc.com/flask-login/#flask-login
     if(login_form.login_sub.data):
         try:
+            import flask
+            from hashlib import sha256
             from passlib.hash import argon2
 
             assert login_form.validate_on_submit(), '无效填写'
@@ -34,7 +39,14 @@ def post_login_register():
             assert user.verification_status == 1 or User.isValid(0, user.create_time), \
                 User.del_by(token=user.token) and "注册失败！您需要重新注册"
             assert user.verification_status == 1, "尚未激活账户，请前往邮箱激活"
-            return redirect(url_for('home.index'))
+            digest = sha256(password.encode('utf-8')).hexdigest()
+            decrypted_prikey = secret.symmetric_decrypt(bytes.fromhex(digest), user.privkey)
+            OnlineUser.create_record(user.usrid, decrypted_prikey)
+            login_user(user)
+            next = flask.request.args.get('next')
+            # next_is_valid should check if the user is valid
+            # permission to access the `next` url
+            return redirect(next or url_for('home.index'))
         except AssertionError as e:
             message = e.args[0] if len(e.args) else str(e)
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \

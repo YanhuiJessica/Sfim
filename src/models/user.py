@@ -26,6 +26,13 @@ class User(UserMixin, db.Model):
 	privkey = Column(VARBINARY(1023), nullable=False, server_default=text("''"))
 	symkey = Column(VARBINARY(255), nullable=False, server_default=text("''"))
 
+	def get_id(self):
+		try:
+			from flask_login._compat import text_type
+			return text_type(self.usrid)
+		except AttributeError:
+			raise NotImplementedError('No `id` attribute - override `get_id`')
+
 	@classmethod
 	def get_by(cls, **kwargs):
 		return cls.query.filter_by(**kwargs).first()
