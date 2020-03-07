@@ -21,4 +21,4 @@ class RegisterForm(PasswordForm):
 class LoginForm(PasswordForm):
     email = StringField('email', validators=[DataRequired(),Email()])
     password = PasswordField('password', validators=[DataRequired()])
-    login_sub = SubmitField('Login', validators=[DataRequired])
+    login_sub = SubmitField('Login', validators=[DataRequired()])
