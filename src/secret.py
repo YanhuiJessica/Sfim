@@ -1,4 +1,5 @@
 from nacl.public import PrivateKey, SealedBox
+from nacl.signing import SigningKey
 from nacl.secret import SecretBox
 from nacl.utils import random
 
@@ -40,3 +41,9 @@ def encrypt(sk:bytes, plaintext: bytes):
 
 def decrypt(sk:bytes, ciphertext: bytes):
     return SealedBox(PrivateKey(sk)).decrypt(ciphertext)
+
+def sign(sk: bytes, message: bytes):
+    return SigningKey(sk).sign(message).signature
+
+def verify(sk: bytes, message: bytes, signature: bytes):
+    return SigningKey(sk).verify_key.verify(message, signature)
