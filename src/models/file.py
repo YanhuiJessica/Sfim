@@ -1,5 +1,5 @@
 from sqlalchemy import Column, INTEGER, String, CHAR, TIMESTAMP, text, and_
-from os import path, mkdir
+from os import path, mkdir, remove
 from config import storage_path
 from models.online_user import OnlineUser
 from models.user import User
@@ -63,3 +63,52 @@ class File(db.Model):
         fi = File(uid=user.usrid, filename=filename, size=size, sha256=hash_value)
         db.session.add(fi)
         db.session.commit()
+
+    @classmethod
+    def delete_file(cls, user, fid):
+        f = File.query.filter(File.fileid == fid).first()
+        assert f, '文件不存在'
+        sha256 = f.sha256
+        db.session.delete(f)
+        db.session.commit()
+        remove(storage_path + str(user.usrid) + '/' + sha256)
+
+    @classmethod
+    def download_file(cls, user, fid, type_):
+        from flask import make_response, send_file
+        from collections import OrderedDict
+        import unicodedata
+        from werkzeug.http import dump_options_header
+        from werkzeug.urls import url_quote
+
+        f = File.query.filter(File.fileid == fid).first()
+        assert f, '文件不存在'
+        hash_value = f.sha256
+        filename = f.filename
+        user_ = OnlineUser.query.filter(OnlineUser.usrid == user.usrid).first()
+        # 获取私钥解密得对称密钥
+        Pk = user_.Pk
+        enc_key = secret.decrypt(Pk, user.symkey)
+        with open(storage_path + str(user.usrid) + '/' + hash_value, 'rb') as f_:
+            content = f_.read()
+            if type_ == 'encrypted':
+                filename = filename + '.encrypted'
+            elif type_ == 'hashvalue':
+                content = hash_value
+                filename = filename + '.hash'
+            else:
+                content = secret.symmetric_decrypt(enc_key, content)
+                if type_ == 'signature':
+                    content = secret.sign(Pk, content)
+                    filename = filename + '.sig'
+            response = make_response(content)
+            filenames = OrderedDict()
+            try:
+                filename = filename.encode('latin-1')
+            except UnicodeEncodeError:
+                filenames['filename'] = unicodedata.normalize('NFKD', filename).encode('latin-1', 'ignore')
+                filenames['filename*']: "UTF-8''{}".format(url_quote(filename))
+            else:
+                filenames['filename'] = filename
+            response.headers.set('Content-Disposition', 'attachment', **filenames)
+            return response
