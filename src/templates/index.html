@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Hind|Oxygen" rel="stylesheet" />
     <link rel="stylesheet" href="../static/css/material-design-iconic-font.css" />
+    <title>Sfim - {{user.usrname}}</title>
     <link rel="stylesheet" href="../static/css/jside-menu.css" />
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
 </head>
@@ -26,7 +27,7 @@
                 </div>
             </div>
             <div class="row for-name">
-                <h3 title="User Name"> Username </h3>
+                <h3 title="User Name"> {{user.usrname}} </h3>
                 <span class="tagline"> Tagline</span>
             </div>
             </div>
@@ -34,11 +35,11 @@
         </div>
         <nav class="menu-container">
         <ul class="menu-items">
-            <li><span class="item-icon"><i class="zmdi zmdi-home"></i></span> <a href="#1"> Home </a></li>
-            <li><span class="item-icon"><i class="zmdi zmdi-notifications"></i></span> <a href="#1"> Messages </a></li>
+            <li><span class="item-icon"><i class="zmdi zmdi-file"></i></span> <a href="{{url_for('home.index')}}"> 我的文件 </a></li>
+            <li><span class="item-icon"><i class="zmdi zmdi-notifications"></i></span> <a href="#1"> 通知消息 </a></li>
             <li> <span class="item-icon"> <i class="zmdi zmdi-group-work"></i> </span> <a href="#1"> My Groups </a></li>
             <li> <span class="item-icon"> <i class="zmdi zmdi-account"></i> </span> <a href="#1"> Profile </a></li>
-            <li style="bottom: 0; position: absolute; width: 100%"> <span class="item-icon"> <i class="zmdi zmdi-square-right"></i> </span> <a href="#1"> Sign out </a></li>
+            <li style="bottom: 0; position: absolute; width: 100%"> <span class="item-icon"> <i class="zmdi zmdi-square-right"></i> </span> <a href="/logout"> 登出 </a></li>
         </ul>
     </nav>
     <div class="dim-overlay"></div>

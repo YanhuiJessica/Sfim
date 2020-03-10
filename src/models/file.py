@@ -1,4 +1,5 @@
-from sqlalchemy import Column, INTEGER, String, CHAR, TIMESTAMP, text, and_
+from sqlalchemy import Column, String, CHAR, TIMESTAMP, text, and_
+from sqlalchemy.dialects.mysql import INTEGER
 from os import path, mkdir, remove
 from config import storage_path
 from models.online_user import OnlineUser

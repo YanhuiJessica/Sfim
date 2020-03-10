@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, make_response
 from forms import RegisterForm, LoginForm
 import re, logging, secret
 from flask import current_app as app
@@ -10,7 +10,7 @@ username_pattern = re.compile(r'[\u4e00-\u9fa5a-zA-Z0-9_]+')
 @login_register.route('/')
 def get_login_register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('home.index'))
 
     return render_template('login_register.html',login_form=LoginForm(),register_form=RegisterForm())
 
@@ -41,12 +41,14 @@ def post_login_register():
             assert user.verification_status == 1, "尚未激活账户，请前往邮箱激活"
             digest = sha256(password.encode('utf-8')).hexdigest()
             decrypted_prikey = secret.symmetric_decrypt(bytes.fromhex(digest), user.privkey)
-            OnlineUser.create_record(user.usrid, decrypted_prikey)
+            token = OnlineUser.create_record(user.usrid, decrypted_prikey)
             login_user(user)
             next = flask.request.args.get('next')
             # next_is_valid should check if the user is valid
             # permission to access the `next` url
-            return redirect(next or url_for('home.index'))
+            resp = make_response(redirect(next or url_for('home.index')))
+            resp.set_cookie('token', token)
+            return resp
         except AssertionError as e:
             message = e.args[0] if len(e.args) else str(e)
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
