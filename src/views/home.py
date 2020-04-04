@@ -6,4 +6,8 @@ home = Blueprint('home', __name__)
 @home.route('')
 @login_required
 def index():
-    return render_template('index.html', user=current_user)
+    from models import File
+
+    user = current_user
+    files = File.query.filter(File.uid == user.usrid).all()
+    return render_template('index.html', user=user, files=files)
