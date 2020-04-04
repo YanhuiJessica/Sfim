@@ -66,6 +66,13 @@
         var hitt = document.getElementById('hint').getElementsByTagName("p")[0];
         hitt.innerHTML = '{{message}}';
         hint();
+        hitt.innerHTML = '\
+        {% with messages = get_flashed_messages() %}\
+            {% for message in messages %}\
+                {{message}}\
+            {% endfor %}\
+        {% endwith %}'
+        hint();
         }
     </script>
 </head>
