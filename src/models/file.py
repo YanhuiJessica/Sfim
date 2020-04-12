@@ -34,8 +34,7 @@ class File(db.Model):
         filename = data.filename
         assert len(filename) <= 64, '文件名过长（>64B）'
         assert filename_pattern.fullmatch(filename), '文件名中不能包含以下字符：\n\\ / : * ? " < > |'
-        import magic
-        mime_type = str(magic.from_buffer(data.read(), mime=True))
+        mime_type = data.mimetype
         assert mime_type in allowed_file_list, '不支持的文件类型'
 
         content = data.read()

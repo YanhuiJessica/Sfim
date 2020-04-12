@@ -2,10 +2,12 @@ import logging
 from views import *
 
 from flask import render_template
+from flask_dropzone import Dropzone
 
 if __name__ == '__main__':
     from database import create_app
     app = create_app(__name__)
+    dropzone = Dropzone(app)
 
     from config import csrf_key
     app.secret_key = csrf_key
