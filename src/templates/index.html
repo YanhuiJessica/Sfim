@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/material-design-iconic-font.css" />
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <title>Sfim - {{user.usrname}}</title>
     <link rel="stylesheet" href="../static/css/jside-menu.css" />
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
     {{ dropzone.load_css() }}
     {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%; min-height: 400px;') }}
     <style>
+        #dropzone {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 54px;
+        }
         #page-content-wrapper {
             padding-top: 100px;
             width: 100%;
@@ -22,7 +28,6 @@
             padding-left: 15px;
             margin-right: auto;
             margin-left: auto;
-            font-family: 'neo';
             font-size: x-large;
         }
         @media (min-width: 768px) {
@@ -137,7 +142,7 @@
     </div>
 
     {{ dropzone.load_js() }}
-    {{ dropzone.config(default_message="点击上传或将文件拖拽至方框内<br>文件将自动提交") }}
+    {{ dropzone.config(max_file_size=20, default_message="点击上传或将文件拖拽至方框内<br>文件将自动提交") }}
     <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../static/js/jquery.jside.menu.js"></script>
     <script type="text/javascript">
@@ -149,6 +154,10 @@
             jSideSkin: "default-skin", // to apply custom skin, just put its name in this string
             });
         });
+    </script>
+    <script>
+        var openButton = document.querySelectorAll('.js-open')
+        var closeButton = document.querySelectorAll('.js-close')
     </script>
 </body>
 </html>
