@@ -20,9 +20,6 @@
    font-family: 'neo';
    src: url("../static/font/NEOTERICc.ttf");
 }
-*{ margin: 0;
-    padding: 0;
-}
 body{
   font-family: 'Helvetica Neue';
   font-weight: 300;

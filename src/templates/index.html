@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/material-design-iconic-font.css" />
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
-    <title>Sfim - {{user.usrname}}</title>
     <link rel="stylesheet" href="../static/css/jside-menu.css" />
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
+    <link rel="stylesheet" href="../static/css/form-style.css" />
+    <title>Sfim - {{user.usrname}}</title>
     {{ dropzone.load_css() }}
     {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%; min-height: 400px;') }}
     <style>
@@ -28,7 +30,7 @@
             padding-left: 15px;
             margin-right: auto;
             margin-left: auto;
-            font-size: x-large;
+            font-size: large;
         }
         @media (min-width: 768px) {
             .container {
@@ -98,34 +100,33 @@
         </div>
         <div class="container">
             {% if files %}
-                <p>您当前上传了以下文件</p>
-                <table>
+                <table class="table_">
                     <thead>
                         <tr>
-                            <th>文件名</th>
-                            <th>文件大小</th>
-                            <th>上传时间</th>
-                            <th>下载</th>
-                            <th>删除</th>
+                            <th class="th_">文件名</th>
+                            <th class="th_">文件大小</th>
+                            <th class="th_">上传时间</th>
+                            <th class="th_">下载</th>
+                            <th class="th_">删除</th>
                         </tr>
                     </thead>
                     {% for file in files %}
-                    <tbody>
+                    <tbody class="tbody_">
                         <tr>
-                            <td>{{file.filename}}</td>
-                            <td>{{file.size}}</td>
-                            <td>{{file.create_time}}</td>
-                            <td>
+                            <td class="td_">{{file.filename}}</td>
+                            <td class="td_">{{file.size}}</td>
+                            <td class="td_">{{file.create_time}}</td>
+                            <td class="td_">
                                 <button class="button js-open"><i class="fa fa-download"></i></button>
                                 <dialog class="dialog js-dialog">
                                     <span class="js-close">&#x2715;</span>
-                                    <a href="/home/download?fid={{file.id_}}&type=encrypted" ><button class="button">密文</button></a>
-                                    <a href="/home/download?fid={{file.id_}}&type=hashvalue" ><button class="button">散列</button></a>
-                                    <a href="/home/download?fid={{file.id_}}&type=plaintext" ><button class="button">解密</button></a>
-                                    <a href="/home/download?fid={{file.id_}}&type=signature" ><button class="button">签名</button></a>
+                                    <a href="/home/download?fid={{file.fileid}}&type=encrypted" ><button class="button">密文</button></a>
+                                    <a href="/home/download?fid={{file.fileid}}&type=hashvalue" ><button class="button">散列</button></a>
+                                    <a href="/home/download?fid={{file.fileid}}&type=plaintext" ><button class="button">解密</button></a>
+                                    <a href="/home/download?fid={{file.fileid}}&type=signature" ><button class="button">签名</button></a>
                                 </dialog>
                             </td>
-                            <td><a href="/home/remove?fid={{file.id_}}"><button class="button"><i class="fa fa-trash"></i></button></a></td>
+                            <td class="td_"><a href="/home/remove?fid={{file.fileid}}"><button class="button"><i class="fa fa-trash"></i></button></a></td>
                         </tr>
                     </tbody>
                     {% endfor %}
@@ -133,6 +134,17 @@
 
                 {% else %}
                 <p>您当前没有上传任何文件</p>
+                <table class="table_">
+                    <thead>
+                        <tr>
+                            <th class="th_">文件名</th>
+                            <th class="th_">文件大小</th>
+                            <th class="th_">上传时间</th>
+                            <th class="th_">下载</th>
+                            <th class="th_">删除</th>
+                        </tr>
+                    </thead>
+                </table>
                 {% endif %}
         </div>
         <div id="dropzone">
@@ -158,6 +170,16 @@
     <script>
         var openButton = document.querySelectorAll('.js-open')
         var closeButton = document.querySelectorAll('.js-close')
+        for (var i = 0; i < openButton.length; i++)
+        {
+            const dialog = document.querySelectorAll('.js-dialog')[i]
+            openButton[i].addEventListener('click', () => {
+                dialog.show()
+            })
+            closeButton[i].addEventListener('click', () => {
+                dialog.close()
+            })
+        }
     </script>
 </body>
 </html>
