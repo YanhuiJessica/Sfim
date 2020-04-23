@@ -38,6 +38,11 @@ class User(UserMixin, db.Model):
 		return cls.query.filter_by(**kwargs).first()
 
 	@classmethod
+	def get_like(cls, string):
+		return list(set(cls.query.filter(User.mail.like('%' + string + '%')).all() + \
+			cls.query.filter(User.usrname.like('%' + string + '%')).all()))
+
+	@classmethod
 	def del_by(cls, **kwargs):
 		return cls.query.filter_by(**kwargs).delete()
 
