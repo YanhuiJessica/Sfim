@@ -57,7 +57,7 @@
         </menuitem>
 
         <menuitem>
-            <form method="GET" action="{{url_for('search_result.search_user')}}">
+            <form method="GET" action="{{url_for('search_result.manage_request')}}">
                 <div class="search-wrapper">
                 <div class="input-holder">
                     <input type="text" class="search-input" name="search_str" placeholder="添加好友：请输入邮箱/用户名" />
@@ -105,8 +105,10 @@
             {% endwith %}
         </div>
         <div class="container">
+            {% if total %}
             <p>搜索：{{search_str}}</p>
             <p>共搜索到 {{total}} 名用户</p>
+            {% endif %}
             {% if users %}
             <table class="table_">
                 <thead>
@@ -125,8 +127,9 @@
                             <button class="button js-open"><i class="fa fa-plus"></i></button>
                             <dialog class="dialog js-dialog">
                                 <span class="js-close">&#x2715;</span>
-                                <form method="GET" action="{{url_for('search_result.search_user')}}">
-                                <input type="text" name="plus" placeholder="备  注" />
+                                <form method="GET" action="{{url_for('search_result.manage_request')}}">
+                                <input type="hidden" name="umail" value="{{usr.mail}}" />
+                                <input style="font-size: 16px; border: 2px solid; padding: 10px;" type="text" name="plus" placeholder="备  注" />
                                 <button type="submit" class="button">添加</button>
                                 </form>
                             </dialog>
