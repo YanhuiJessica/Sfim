@@ -64,4 +64,4 @@ class OnlineUser(db.Model):
             total_seconds = delta.total_seconds()
             if total_seconds < token_expired:
                 return record
-        return None
+        return record.usrid

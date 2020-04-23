@@ -10,7 +10,10 @@ def get_logout():
     token = request.cookies.get('token')
     record = OnlineUser.verify_token(token)
     if current_user is not None:
-        OnlineUser.delete_record(record.usrid)
+        if isinstance(record, int):
+            OnlineUser.delete_record(record)
+        else:
+            OnlineUser.delete_record(record.usrid)
         resp = make_response(redirect('/login_register'))
         resp.delete_cookie('token')
         logout_user()
