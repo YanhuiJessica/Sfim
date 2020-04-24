@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/material-design-iconic-font.css" />
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/jside-menu.css" />
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
     <link rel="stylesheet" href="../static/css/form-style.css" />
+    <link rel="stylesheet" href="../static/css/search-wrapper.css" />
     <title>{{user.usrname}} - 好友列表</title>
     <style>
         #page-content-wrapper {
@@ -52,6 +55,18 @@
         <menuitem class="logo" title="Sfim Logo">
             <a href="#1"><img src="../static/img/Sfim.png" alt="Sfim" /></a>
         </menuitem>
+
+        <menuitem>
+            <form method="GET" action="{{url_for('search_result.manage_request')}}">
+                <div class="search-wrapper">
+                <div class="input-holder">
+                    <input type="text" class="search-input" name="search_str" placeholder="添加好友：请输入邮箱/用户名" />
+                    <button class="search-icon" onclick="searchToggle(this, event);"><span></span></button>
+                </div>
+                <span class="close" onclick="searchToggle(this, event);"></span>
+            </form>
+                </div>
+        </menuitem>
     </menu>
     <div class="menu-head">
         <span class="layer">
@@ -82,7 +97,46 @@
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
-
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+                {% for message in messages %}
+                <p>{{message}}</p>
+                {% endfor %}
+            {% endwith %}
+        </div>
+        <div class="container">
+            <p>您当前共有 {{total}} 名好友</p>
+            {% if friends %}
+            <table class="table_">
+                <thead>
+                    <tr>
+                        <th class="th_">邮箱</th>
+                        <th class="th_">用户名</th>
+                        <th class="th_">删除好友</th>
+                    </tr>
+                </thead>
+                {% for friend in friends %}
+                <tbody class="tbody_">
+                    <tr>
+                        <td class="td_">{{friend.mail}}</td>
+                        <td class="td_">{{friend.usrname}}</td>
+                        <td class="td_">
+                            <button class="button js-open"><i class="fa fa-close"></i></button>
+                            <dialog class="dialog js-dialog">
+                                <span class="js-close">&#x2715;</span>
+                                <form method="GET" action="{{url_for('friends.break_friendship')}}">
+                                <input type="hidden" name="fmail" value="{{friend.mail}}" />
+                                <p>您确定要删除该好友吗？</p>
+                                <button type="submit" class="button">确定</button>
+                                </form>
+                            </dialog>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+            {% endif %}
+        </div>
     </div>
 
     <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
@@ -96,6 +150,33 @@
             jSideSkin: "default-skin", // to apply custom skin, just put its name in this string
             });
         });
+    </script>
+    <script>
+        var openButton = document.querySelectorAll('.js-open')
+        var closeButton = document.querySelectorAll('.js-close')
+        for (var i = 0; i < openButton.length; i++)
+        {
+            const dialog = document.querySelectorAll('.js-dialog')[i]
+            openButton[i].addEventListener('click', () => {
+                dialog.show()
+            })
+            closeButton[i].addEventListener('click', () => {
+                dialog.close()
+            })
+        }
+
+        function searchToggle(obj, evt){
+        var container = $(obj).closest('.search-wrapper');
+        if(!container.hasClass('active')){
+            container.addClass('active');
+            evt.preventDefault();
+        }
+        else if(container.hasClass('active') && $(obj).closest('.input-holder').length == 0){
+            container.removeClass('active');
+            // clear input
+            container.find('.search-input').val('');
+        }
+        }
     </script>
 </body>
 </html>
