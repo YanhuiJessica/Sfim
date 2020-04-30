@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, flash, redirect, request
 from flask_login import login_required, current_user
-from models import File
+from models import File, Friend, User
 
 home = Blueprint('home', __name__)
 
@@ -9,7 +9,15 @@ home = Blueprint('home', __name__)
 def index():
     user = current_user
     files = File.query.filter(File.uid == user.usrid).all()
-    return render_template('index.html', user=user, files=files)
+    uid = user.usrid
+    friendships = Friend.get_friendship(uid)
+    friends = []
+    for fs in friendships:
+        if fs.usrid == uid:
+            friends.append(User.get_by(usrid=fs.friendid))
+        else:
+            friends.append(User.get_by(usrid=fs.usrid))
+    return render_template('index.html', user=user, files=files, friends=friends)
 
 @home.route('/upload', methods=['GET', 'POST'])
 @login_required

@@ -9,7 +9,7 @@ friends = Blueprint('friends', __name__)
 def list_group():
     user = current_user
     uid = user.usrid
-    friendships = Friend.get_friendship(user.usrid)
+    friendships = Friend.get_friendship(uid)
     friends = []
     for fs in friendships:
         if fs.usrid == uid:
