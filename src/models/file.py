@@ -27,6 +27,10 @@ class File(db.Model):
     create_time = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
 
     @classmethod
+    def get_by(cls, **kwargs):
+		return cls.query.filter_by(**kwargs).first()
+
+    @classmethod
     def upload_file(cls, user, data):
         from hashlib import sha256
         from config import allowed_file_list
