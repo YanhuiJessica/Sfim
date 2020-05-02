@@ -147,9 +147,10 @@
                                 </dialog>
                             </td>
                             <td class="td_">
-                                <button class="button js-open"><i class="fa fa-share"></i></button>
-                                <dialog class="dialog js-dialog" style="font-size: 17px;">
-                                    <span class="js-close">&#x2715;</span>
+                                <button class="button share-open"><i class="fa fa-share"></i></button>
+                                <dialog class="dialog share-dialog" style="font-size: 17px;">
+                                    <span class="share-close">&#x2715;</span>
+                                    <input class="fid" name="fid" required="" type="hidden" value="{{file.fileid}}">
                                     <div class="pk-form">
                                     <select multiple size="5" class="friends pickout" name="friends" id="friends" placeholder="请选择要分享的好友">
                                         {% for friend in friends %}
@@ -157,7 +158,8 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <button class="button">确定</button>
+                                <button id="ShareButton" class="btn share-js" type="submit">确定</button>
+                                <table id="tb" class="tb"></table>
                             </dialog>
                             </td>
                             <td class="td_"><a href="/home/remove?fid={{file.fileid}}"><button class="button"><i class="fa fa-trash"></i></button></a></td>
@@ -211,14 +213,53 @@
     <script type="text/javascript">
         var openButton = document.querySelectorAll('.js-open')
         var closeButton = document.querySelectorAll('.js-close')
+
+        var shareopen = document.querySelectorAll('.share-open')
+        var shareclose = document.querySelectorAll('.share-close')
+        var shareButton = document.querySelectorAll('.share-js')
+
         for (var i = 0; i < openButton.length; i++)
         {
             const dialog = document.querySelectorAll('.js-dialog')[i]
+            const sharedialog = document.querySelectorAll('.share-dialog')[i]
+            const shareButton = document.querySelectorAll('.share-js')[i]
+            const fid = document.querySelectorAll('.fid')[i]
+            const tb = document.querySelectorAll('.tb')[i]
             openButton[i].addEventListener('click', () => {
                 dialog.show()
             })
             closeButton[i].addEventListener('click', () => {
                 dialog.close()
+            })
+            shareopen[i].addEventListener('click', () => {
+                sharedialog.show()
+            })
+            shareclose[i].addEventListener('click', () => {
+                sharedialog.close()
+            })
+            shareButton.addEventListener('click', () => {
+                var form_data = new FormData()
+                var select_choice = $("#friends option:selected").val()
+                form_data.append('fid', fid.value)
+                form_data.append('choice', select_choice)
+                $.ajax({
+                    // Your server script to process the upload
+                    url: "/share/ensure",
+                    type: 'POST',
+                    // Form data
+                    data: form_data,
+                    traditional: true,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    async: true,
+                    success: function(data){
+                        tb.textContent = (JSON.stringify(data))
+                    },
+                    error: function(){
+                        alert('error')
+                    }
+                });
             })
         }
 

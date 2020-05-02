@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, HiddenField
 from wtforms.validators import DataRequired, Length, Email
 from flask import current_app as app
 
@@ -22,3 +22,8 @@ class LoginForm(PasswordForm):
     email = StringField('email', validators=[DataRequired(),Email()])
     password = PasswordField('password', validators=[DataRequired()])
     login_sub = SubmitField('Login', validators=[DataRequired()])
+
+class EnsureForm(FlaskForm):
+    fid = HiddenField('fid', validators=[DataRequired()])
+    nonce = HiddenField('nonce', validators=[DataRequired()])
+    sharekey = StringField('sharekey', validators=[DataRequired()])

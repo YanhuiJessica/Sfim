@@ -8,6 +8,7 @@ mysql_schema = os.environ.get("DB_SCHEMA", default="sfim")
 token_expired = float(os.environ.get("TOKEN_EXPIRED", default=600))
 
 storage_path = os.environ.get("STORAGE_PATH", default="storage/")
+shared_path = os.environ.get("shared_path", default="shared/")
 
 authlen = os.environ.get("AUTHCODE_LEN", default=25)
 # 用户应在自注册起 24 小时内完成邮箱验证

@@ -15,6 +15,7 @@ if __name__ == '__main__':
     # --------- 注册蓝图 --------- #
     app.register_blueprint(home, url_prefix='/home')
     app.register_blueprint(friends, url_prefix='/friends')
+    app.register_blueprint(share, url_prefix='/share')
     app.register_blueprint(search_result, url_prefix='/search_result')
     app.register_blueprint(login_register, url_prefix='/login_register')
     app.register_blueprint(verify, url_prefix='/verify')

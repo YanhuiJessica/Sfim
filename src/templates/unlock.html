@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sfim - 分享验证</title>
+</head>
+<body>
+    <a>请输入分享码下载来自用户 {{name}} 分享的文件 {{fname}}</a>
+    <form action="/share/download" method="post">
+        <p>{{ form.fid() }}</p>
+        <p>{{ form.nonce() }}</p>
+        <p>{{ form.sharekey(placeholder='分享码') }}</p>
+        <p>{{ form.csrf_token }}</p>
+        <p><input type="submit" value="确认"></p>
+    </form>
+</body>
+</html>
