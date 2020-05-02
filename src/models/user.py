@@ -60,7 +60,7 @@ class User(UserMixin, db.Model):
 			"o:tag": ['Sfim', 'Verify Email'],
 			"h:X-Mailgun-Variables": json.dumps({
 				"name": name,
-					"verify_link": "http://www." + domain_name + "/verify?token=" + token + \
+					"verify_link": "http://" + domain_name + "/verify?token=" + token + \
 					"&authcode=" + authcode
 				})})
 
