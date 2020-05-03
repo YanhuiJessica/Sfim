@@ -64,14 +64,16 @@
         }
 
         var hitt = document.getElementById('hint').getElementsByTagName("p")[0];
-        hitt.innerHTML = '{{message}}';
-        hint();
         hitt.innerHTML = '\
+        {% if message %}\
+        {{message}}\
+        {% else %}\
         {% with messages = get_flashed_messages() %}\
             {% for message in messages %}\
                 {{message}}\
             {% endfor %}\
-        {% endwith %}'
+        {% endwith %}\
+        {% endif %}'
         hint();
         }
     </script>
