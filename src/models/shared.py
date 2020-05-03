@@ -8,7 +8,7 @@ class Share(db.Model):
 
     __tablename__ = 'share'
     id_ = Column(INTEGER(11), primary_key=True)
-    fid = Column(ForeignKey('files.fileid'), nullable=False)
+    fid = Column(INTEGER(11), nullable=False)
     share_time = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp() ON UPDATE current_timestamp()"))
     enc_key = Column(VARBINARY(1023), nullable=False)
     sharekey = Column(CHAR(255), nullable=False)
@@ -16,13 +16,14 @@ class Share(db.Model):
 
     @classmethod
     def get_by(cls, **kwargs):
-		return cls.query.filter_by(**kwargs).first()
+        return cls.query.filter_by(**kwargs).first()
 
     @classmethod
-    def add_share(cls, user, fid, ShareKey, nonce, enc_key):
+    def add_share(cls, fid, ShareKey, nonce, enc_key):
         shared_file = Share(fid=fid, sharekey=ShareKey, nonce=nonce, enc_key=enc_key)
         db.session.add(shared_file)
         db.session.commit()
+        return shared_file.id_
 
     @classmethod
     def decrypt_and_encrypt(cls, fid, user, sym_key):

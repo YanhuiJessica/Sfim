@@ -1,6 +1,6 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, request, render_template, flash, redirect, url_for
 from flask_login import login_required, current_user
-from models import User, Share
+from models import User, Share, Message
 import secret
 
 share = Blueprint('share', __name__)
@@ -24,7 +24,12 @@ def post_share():
     enc_key = secret.symmetric_encrypt(ShareKey, sym_key)
     # 慢速哈希分享码并存储
     hashShareKey = argon2.using(rounds=256, memory_cost=1024).hash(ShareKey)
-    share.add_share(user, fid, hashShareKey, nonce, enc_key)
+    sid = Share.add_share(fid, hashShareKey, nonce, enc_key)
+    # 向指定用户发送分享消息
+    choice = choice.split(',')
+    for u in choice:
+        Message.create_msg(User.get_by(mail=u).usrid, user.usrid, sid)
+    return '分享成功！'
 
 @share.route('/verify')
 def verify_share():

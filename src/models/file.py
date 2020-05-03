@@ -28,7 +28,7 @@ class File(db.Model):
 
     @classmethod
     def get_by(cls, **kwargs):
-		return cls.query.filter_by(**kwargs).first()
+        return cls.query.filter_by(**kwargs).first()
 
     @classmethod
     def upload_file(cls, user, data):

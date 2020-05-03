@@ -152,7 +152,7 @@
                                     <span class="share-close">&#x2715;</span>
                                     <input class="fid" name="fid" required="" type="hidden" value="{{file.fileid}}">
                                     <div class="pk-form">
-                                    <select multiple size="5" class="friends pickout" name="friends" id="friends" placeholder="请选择要分享的好友">
+                                    <select multiple="multiple" size="5" class="friends pickout" name="friends" id="friends" placeholder="请选择要分享的好友">
                                         {% for friend in friends %}
                                         <option value="{{friend.mail}}">{{friend.mail}} - {{friend.usrname}}</option>
                                         {% endfor %}
@@ -239,7 +239,7 @@
             })
             shareButton.addEventListener('click', () => {
                 var form_data = new FormData()
-                var select_choice = $("#friends option:selected").val()
+                var select_choice = $("#friends").val()
                 form_data.append('fid', fid.value)
                 form_data.append('choice', select_choice)
                 $.ajax({
@@ -254,7 +254,7 @@
                     processData: false,
                     async: true,
                     success: function(data){
-                        tb.textContent = (JSON.stringify(data))
+                        alert(data)
                     },
                     error: function(){
                         alert('error')
