@@ -4,7 +4,6 @@ DROP DATABASE IF EXISTS `sfim`;
 CREATE DATABASE `sfim` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */;
 USE `sfim`;
 
--- Dumping structure for table sfim.users
 CREATE TABLE `users` (
   `usrid` int(11) NOT NULL AUTO_INCREMENT,
   `usrname` varchar(255) NOT NULL DEFAULT '',
@@ -14,12 +13,12 @@ CREATE TABLE `users` (
   `authcode` varchar(50) NOT NULL DEFAULT '',
   `verification_status` tinyint(1) NOT NULL DEFAULT '0',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '用户创建时间',
-  `generate_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '链接生成时间',
+  `generate_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '链接生成时间',
   `pubkey` varbinary(255) NOT NULL DEFAULT '',
   `privkey` varbinary(1023) NOT NULL DEFAULT '',
   `symkey` varbinary(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`usrid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping structure for table sfim.online_users
 CREATE TABLE `online_users` (

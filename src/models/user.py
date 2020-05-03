@@ -21,7 +21,7 @@ class User(UserMixin, db.Model):
 	authcode = Column(String(50), nullable=False)
 	verification_status = Column(TINYINT(1),nullable=False,server_default=text("'0'"))
 	create_time = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp()"))
-	generate_time = Column(TIMESTAMP, server_default=text("current_timestamp()"))
+	generate_time = Column(TIMESTAMP, server_default=text("current_timestamp()"), server_onupdate=text('CURRENT_TIMESTAMP'))
 	pubkey = Column(VARBINARY(255), nullable=False, server_default=text("''"))
 	privkey = Column(VARBINARY(1023), nullable=False, server_default=text("''"))
 	symkey = Column(VARBINARY(255), nullable=False, server_default=text("''"))
@@ -77,7 +77,9 @@ class User(UserMixin, db.Model):
 	def link_refresh(cls, token):
 		user = User.get_by(token = token)
 		authcode = cls.generate_verify_authcode()
-		return cls.send_verify_email(user.name, user.email, token, authcode).status_code == 200
+		user.authcode = authcode
+		db.session.commit()
+		return cls.send_verify_email(user.usrname, user.mail, token, authcode).status_code == 200
 
 	@classmethod
 	def isVaild(cls, template_time_id, compare_time):
