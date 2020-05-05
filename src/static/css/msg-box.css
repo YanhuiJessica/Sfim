@@ -1,0 +1,38 @@
+.flag {
+    display:table;
+    width:100%;
+    margin-top:0;
+    margin-bottom:24px;
+}
+.flag__image,.flag__body {
+	display: table-cell;
+	vertical-align: middle;
+}
+.flag__body{
+    width:100%;
+}
+.note {
+    position: relative;
+    overflow: hidden;
+    color: white;
+    background-color: #9b59b6;
+}
+.note--0 {
+	background-color: #34495e;
+}
+.note--1 {
+    background-color: #34495e44;
+}
+.note__icon,.note__text{
+    padding:24px;
+}
+.note__text{
+    padding-right:72px;
+}
+.note__close {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+	font-size: 24px;
+	color: white;
+}

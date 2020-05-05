@@ -12,6 +12,7 @@ class Share(db.Model):
     share_time = Column(TIMESTAMP, nullable=False, server_default=text("current_timestamp() ON UPDATE current_timestamp()"))
     enc_key = Column(VARBINARY(1023), nullable=False)
     sharekey = Column(CHAR(255), nullable=False)
+    enc_sharekey = Column(VARBINARY(2047), nullable=False)
     nonce = Column(CHAR(8), nullable=False)
 
     @classmethod
@@ -19,8 +20,8 @@ class Share(db.Model):
         return cls.query.filter_by(**kwargs).first()
 
     @classmethod
-    def add_share(cls, fid, ShareKey, nonce, enc_key):
-        shared_file = Share(fid=fid, sharekey=ShareKey, nonce=nonce, enc_key=enc_key)
+    def add_share(cls, fid, ShareKey, enc_ShareKey, nonce, enc_key):
+        shared_file = Share(fid=fid, sharekey=ShareKey, enc_sharekey=enc_ShareKey, nonce=nonce, enc_key=enc_key)
         db.session.add(shared_file)
         db.session.commit()
         return shared_file.id_

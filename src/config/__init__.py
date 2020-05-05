@@ -30,3 +30,5 @@ allowed_file_list = tuple(os.environ.get("ALLOWED_SUFFIX", default="\
  'application/vnd.openxmlformats-officedocument.presentationml.presentation'").replace("'", "").replace(" ", "").split(','))
 
 api_key = os.environ.get("MAILGUN_API_KEY", default="key-1670ec1054587094aa967ece6fcb2b53")
+sy_private_key = os.environ.get('SY_PRIVATE_KEY', default='5e49835ca1e8073180d51b7725622f04270f62950a499f18946fafceef8efb07')
+sy_public_key = os.environ.get('SY_PUBLIC_KEY', default='5e49835ca1e8073180d51b7725622f04270f62950a499f18946fafceef8efb07')
