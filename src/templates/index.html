@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../static/css/form-style.css" />
     <link rel="stylesheet" href="../static/css/search-wrapper.css" />
     <link rel="stylesheet" href="../static/css/pickout.min.css" />
+    <link rel="stylesheet" href="../static/css/noticejs.css" />
+    <link href="https://raw.githubusercontent.com/daneden/animate.css/master/animate.css" rel="stylesheet">
     <title>Sfim - {{user.usrname}}</title>
     {{ dropzone.load_css() }}
     {{ dropzone.style('border: 2px dashed #0087F7; margin: 10%; min-height: 400px;') }}
@@ -111,13 +113,6 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container">
-            {% with messages = get_flashed_messages() %}
-                {% for message in messages %}
-                <p>{{message}}</p>
-                {% endfor %}
-            {% endwith %}
-        </div>
-        <div class="container">
             {% if files %}
                 <table class="table_">
                     <thead>
@@ -159,7 +154,6 @@
                                     </select>
                                 </div>
                                 <button id="ShareButton" class="btn share-js" type="submit">确定</button>
-                                <table id="tb" class="tb"></table>
                             </dialog>
                             </td>
                             <td class="td_"><a href="/home/remove?fid={{file.fileid}}"><button class="button"><i class="fa fa-trash"></i></button></a></td>
@@ -194,6 +188,7 @@
     <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../static/js/jquery.jside.menu.js"></script>
     <script src="../static/js/pickout.min.js"></script>
+    <script src="../static/js/notice.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
 
@@ -209,6 +204,23 @@
 			'theme': 'cricket',
 			'search': true
 		});
+
+        var msg = '{% with messages = get_flashed_messages() %} \
+                        {% for message in messages %} \
+                            {{message}} \
+                        {% endfor %} \
+                   {% endwith %}'
+        if (!RegExp("^[ ]+$").test(msg)){
+            new NoticeJs({
+            text: msg,
+            position: 'topCenter',
+            type: 'info',
+            animation: {
+                open: 'animated slideInDown',
+                close: 'animated zoomOut'
+            }
+        }).show();
+        }
     </script>
     <script type="text/javascript">
         var openButton = document.querySelectorAll('.js-open')
@@ -223,7 +235,6 @@
             const dialog = document.querySelectorAll('.js-dialog')[i]
             const sharedialog = document.querySelectorAll('.share-dialog')[i]
             const fid = document.querySelectorAll('.fid')[i]
-            const tb = document.querySelectorAll('.tb')[i]
             openButton[i].addEventListener('click', () => {
                 dialog.show()
             })
@@ -253,7 +264,14 @@
                     processData: false,
                     async: true,
                     success: function(data){
-                        alert(data)
+                        new NoticeJs({
+                            text: data,
+                            position: 'topCenter',
+                            animation: {
+                                open: 'animated slideInDown',
+                                close: 'animated zoomOut'
+                            }
+                        }).show();
                     },
                     error: function(){
                         alert('error')

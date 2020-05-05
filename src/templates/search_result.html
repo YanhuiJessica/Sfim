@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
     <link rel="stylesheet" href="../static/css/form-style.css" />
     <link rel="stylesheet" href="../static/css/search-wrapper.css" />
+    <link rel="stylesheet" href="../static/css/noticejs.css" />
+    <link href="https://raw.githubusercontent.com/daneden/animate.css/master/animate.css" rel="stylesheet">
     <title>Sfim - 用户搜索结果</title>
     <style>
         #page-content-wrapper {
@@ -98,13 +100,6 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container">
-            {% with messages = get_flashed_messages() %}
-                {% for message in messages %}
-                <p>{{message}}</p>
-                {% endfor %}
-            {% endwith %}
-        </div>
-        <div class="container">
             {% if total %}
             <p>搜索：{{search_str}}</p>
             <p>共搜索到 {{total}} 名用户</p>
@@ -144,6 +139,7 @@
 
     <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
     <script src="../static/js/jquery.jside.menu.js"></script>
+    <script src="../static/js/notice.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
 
@@ -153,6 +149,23 @@
             jSideSkin: "default-skin", // to apply custom skin, just put its name in this string
             });
         });
+
+        var msg = '{% with messages = get_flashed_messages() %} \
+                        {% for message in messages %} \
+                            {{message}} \
+                        {% endfor %} \
+                   {% endwith %}'
+        if (!RegExp("^[ ]+$").test(msg)){
+            new NoticeJs({
+            text: msg,
+            position: 'topCenter',
+            type: 'info',
+            animation: {
+                open: 'animated slideInDown',
+                close: 'animated zoomOut'
+            }
+        }).show();
+        }
     </script>
     <script>
         var openButton = document.querySelectorAll('.js-open')
