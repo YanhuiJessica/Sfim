@@ -32,3 +32,10 @@ class Message(db.Model):
         msg = cls.get_by(id_ = mid)
         msg.read_status = 1
         db.session.commit()
+
+    @classmethod
+    def delete_msg(cls, mid):
+        msg = cls.get_by(id_ = mid)
+        if msg:
+            db.session.delete(msg)
+            db.session.commit()

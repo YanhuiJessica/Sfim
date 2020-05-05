@@ -17,13 +17,26 @@ def show_msg_detail():
     from config import domain_name, sy_private_key
     from flask import jsonify
     from models import Share
-    import secret
+    import secret, traceback
 
-    shareid = request.form['sid']
-    msgid = request.form['mid']
-    share = Share.get_by(id_ = shareid)
-    Message.set_readed(msgid)
-    link = 'http://' + domain_name + '/share/verify?fid=' + str(share.fid) + '&nonce=' + share.nonce
-    # 使用服务器私钥解密分享码
-    sk = secret.decrypt(bytes.fromhex(sy_private_key), share.enc_sharekey)
-    return jsonify(link=link, sharekey=sk.hex())
+    try:
+        shareid = request.form['sid']
+        msgid = request.form['mid']
+        share = Share.get_by(id_ = shareid)
+        Message.set_readed(msgid)
+        link = 'http://' + domain_name + '/share/verify?fid=' + str(share.fid) + '&nonce=' + share.nonce
+        # 使用服务器私钥解密分享码
+        sk = secret.decrypt(bytes.fromhex(sy_private_key), share.enc_sharekey)
+        return jsonify(link=link, sharekey=sk.hex())
+    except Exception as e:
+        return e.args
+
+@msg_box.route('/del_msg', methods=['POST'])
+@login_required
+def delete_msg():
+    mid = request.form['mid']
+    try:
+        Message.delete_msg(mid)
+        return '200'
+    except Exception as e:
+        return e.args

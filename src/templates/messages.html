@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../static/css/material-design-iconic-font.css" />
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/jside-menu.css" />
     <link rel="stylesheet" href="../static/css/jside-skins.css" />
     <link rel="stylesheet" href="../static/css/form-style.css" />
     <link rel="stylesheet" href="../static/css/search-wrapper.css" />
     <link rel="stylesheet" href="../static/css/msg-box.css" />
+    <link rel="stylesheet" href="../static/css/simple-bs-dialog.min.css"
     <link rel="stylesheet" href="../static/css/noticejs.css" />
     <link href="https://raw.githubusercontent.com/daneden/animate.css/master/animate.css" rel="stylesheet">
     <title>{{user.usrname}} - 通知消息</title>
@@ -120,10 +121,11 @@
                 <div class="flag__body note__text">
                     <input class="shareid" type="hidden" value="{{msg.shareid}}">
                     <input class="msgid" type="hidden" value="{{msg.id_}}">
+                    <input class="filename" type="hidden" value="{{msg.filename}}">
                     <span><a href="javascript:;" class="showDetail" id="showDetail">{{msg.send_from_user}} 向您分享了文件 {{msg.filename}}</a></span>
                     <em style="float: right; color: lightgray;">{{msg.send_time}}</em>
                 </div>
-                <a href="#" class="note__close"><i class="fa fa-times"></i></a>
+                <a href="javascript:;" class="note__close"><i class="fa fa-times"></i></a>
             </div>
             {% endfor %}
             {% else %}
@@ -131,9 +133,12 @@
             {% endif %}
         </div>
     </div>
-    <script src="../static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.0.js" type="text/javascript"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="../static/js/jquery.jside.menu.js"></script>
     <script src="../static/js/notice.js"></script>
+    <script src="../static/js/simple-bs-dialog.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
 
@@ -174,19 +179,16 @@
         }
         }
 
-        $(".note__close").click(function(){
-            $(this).parent().fadeOut(500, function(){
-                $(this).remove();
-            });
-        });
-
         var showButton = document.querySelectorAll('.showDetail')
 
         for (var i = 0; i < showButton.length; i++)
         {
             const showDetail = document.querySelectorAll('.showDetail')[i]
+            const msg_del = document.querySelectorAll('.note__close')[i]
             const sid = document.querySelectorAll('.shareid')[i]
             const mid = document.querySelectorAll('.msgid')[i]
+            const fn = document.querySelectorAll('.filename')[i]
+            const msg_box = document.querySelectorAll('.flag')[i]
             showDetail.addEventListener('click', () => {
                 var form_data = new FormData()
                 form_data.append('sid', sid.value)
@@ -201,12 +203,77 @@
                     processData: false,
                     async: true,
                     success: function (data) {
-                        alert(JSON.stringify(data))
+                        SimpleBsDialog.show({
+                            title: '文件 ' + fn.value + ' 详细分享信息',
+                            html: '<div style="word-wrap:break-word;">分享链接：<a href=' + data.link +'>' + data.link + '</a><br>提取码：' + data.sharekey + '</div>',
+                            width: '65%',
+                            autoWidth: true,
+                            buttons: [{
+                                id: 'btn-ok',
+                                label: '确定',
+                                cssClass: 'btn-primary',
+                                action: function(dialogRef) {
+                                    dialogRef.close();
+                                }
+                            }]
+                        })
+                        msg_box.setAttribute('class', 'flag note note--1')
                     },
-                    error: function (){
-                        alert('error')
+                    error: function (e){
+                        alert(e)
                     }
                 });
             })
+
+            msg_del.addEventListener('click', () => {
+                SimpleBsDialog.show({
+                    title: '警告',
+                    html: '您确定要删除这条分享记录吗？（删除后无法撤销）',
+                    height: '200px',
+                    buttons: [{
+                        id: 'btn-ok',
+                        label: '确定',
+                        cssClass: 'btn-primary',
+                        action: function(dialogRef) {
+                            dialogRef.close();
+                            var form_data = new FormData()
+                            form_data.append('mid', mid.value)
+                            $.ajax({
+                                url: '/msg_box/del_msg',
+                                type: 'POST',
+                                data: form_data,
+                                traditional: true,
+                                contentType: false,
+                                cache: false,
+                                processData: false,
+                                async: true,
+                                success: function () {
+                                    new NoticeJs({
+                                        text: '删除成功！',
+                                        position: 'topCenter',
+                                        type: 'info',
+                                        animation: {
+                                            open: 'animated slideInDown',
+                                            close: 'animated zoomOut'
+                                        }
+                                    }).show();
+                                    msg_box.remove()
+                                },
+                                error: function (e){
+                                    alert(e)
+                                }
+                            });
+                        },
+                    }, {
+                        id: 'btn-cancel',
+                        label: '取消',
+                        cssClass: 'btn-warning',
+                        action: function(dialogRef) {
+                            dialogRef.close();
+                        },
+                    },
+                    ]
+                });
+            });
         }
     </script>
