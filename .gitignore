@@ -2,3 +2,5 @@ __pycache__/
 *.psd
 shared/
 storage/
+.pytest_cache
+.vscode

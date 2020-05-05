@@ -13,6 +13,7 @@ if __name__ == '__main__':
     app.secret_key = csrf_key
 
     # --------- 注册蓝图 --------- #
+    app.register_blueprint(start,url_prefix='/')
     app.register_blueprint(home, url_prefix='/home')
     app.register_blueprint(friends, url_prefix='/friends')
     app.register_blueprint(share, url_prefix='/share')
@@ -36,4 +37,4 @@ if __name__ == '__main__':
         return User.query.filter(User.usrid == int(userid)).first()
 
     login_manager.login_view = 'login_register.get_login_register'
-    app.run(host="192.168.1.115", port=8080)
+    app.run(host="192.168.0.101", port=8080)
