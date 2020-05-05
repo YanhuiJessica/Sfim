@@ -18,7 +18,7 @@ link_available_time_in_second = os.environ.get("LINK_AVAILABLE", default=600)
 
 csrf_key = os.environ.get("CSRF_KEY", default="3a81a2312e3f449dc7b925b95f0550c2-f8faf5ef-ea8b471d")
 
-domain_name = os.environ.get("SFIM_DOMAIN_NAME", default="sfim.tools")
+domain_name = os.environ.get("SFIM_DOMAIN_NAME", default="www.sfim.com.cn")
 
 allowed_file_list = tuple(os.environ.get("ALLOWED_SUFFIX", default="\
 'image/jpeg', 'image/png','application/pdf', 'image/bmp','image/gif', \
