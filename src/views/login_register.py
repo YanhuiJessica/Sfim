@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, make_response
 from forms import RegisterForm, LoginForm
-import re, logging, secret
+import re, secret
 from flask import current_app as app
 from flask_login import login_user, current_user
 
@@ -24,7 +24,7 @@ def post_login_register():
     # http://www.pythondoc.com/flask-login/#flask-login
     if(login_form.login_sub.data):
         try:
-            import flask, traceback
+            import flask
             from hashlib import sha256
             from passlib.hash import argon2
 
@@ -70,8 +70,6 @@ def post_login_register():
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
                 message = "注册成功！离使用 Sfim 只差一步！请前往邮箱激活您的账户。")
         except AssertionError as e:
-            if(traceback):
-                logging.warning(traceback.format_exc())
             message = e.args[0] if len(e.args) else str(e)
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
                 message = message)
