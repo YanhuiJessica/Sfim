@@ -20,6 +20,18 @@ class Share(db.Model):
         return cls.query.filter_by(**kwargs).first()
 
     @classmethod
+    def delete_share(cls, sid):
+        from os import remove
+        from models import File
+
+        share = cls.get_by(id_ = sid)
+        if share:
+            db.session.delete(share)
+            db.session.commit()
+            f = File.get_by(fileid = fid)
+            remove(shared_path + str(f.uid) + '/' + f.sha256)
+
+    @classmethod
     def add_share(cls, fid, ShareKey, enc_ShareKey, nonce, enc_key):
         shared_file = Share(fid=fid, sharekey=ShareKey, enc_sharekey=enc_ShareKey, nonce=nonce, enc_key=enc_key)
         db.session.add(shared_file)

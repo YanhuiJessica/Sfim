@@ -35,7 +35,13 @@ class Message(db.Model):
 
     @classmethod
     def delete_msg(cls, mid):
+        from models import Share
+
         msg = cls.get_by(id_ = mid)
+        sid = msg.shareid
         if msg:
             db.session.delete(msg)
             db.session.commit()
+            msg = cls.get_by(shareid = sid)
+            if msg is None: # 当分享没有关联消息时删除
+                Share.delete_share(sid)
