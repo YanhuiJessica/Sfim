@@ -70,7 +70,8 @@ def post_login_register():
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
                 message = "注册成功！离使用 Sfim 只差一步！请前往邮箱激活您的账户。")
         except AssertionError as e:
-            logging.warning(traceback.format_exc())
+            if(traceback):
+                logging.warning(traceback.format_exc())
             message = e.args[0] if len(e.args) else str(e)
             return render_template('login_register.html', login_form = login_form, register_form = signin_form, \
                 message = message)
