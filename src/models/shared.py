@@ -25,6 +25,7 @@ class Share(db.Model):
         from models import File
 
         share = cls.get_by(id_ = sid)
+        fid = share.fid
         if share:
             db.session.delete(share)
             db.session.commit()
