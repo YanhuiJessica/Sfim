@@ -121,7 +121,7 @@
                         </p>
                         <p class="form">
                             <i class="fa fa-lock"></i>
-                            {{register_form.password(onclick='PassStrong()', onkeyup='PassStrong()', placeholder=' 密  码',id='password')}}
+                            {{register_form.password(onclick='PassStrong()', onkeyup='PassStrong()', placeholder=' 密  码',id='passwd')}}
                             <div class="vali_pass_progress">
                                 <div class="vali_pass_inner_progress"></div>
                             </div>
@@ -216,7 +216,7 @@
     }
 
     function PassStrong(){
-        var input_pass = document.getElementById('password').value
+        var input_pass = passwd.value
         var input_progress = document.getElementsByClassName("vali_pass_inner_progress")[0]
         var regxs = []
         regxs.push(/[^a-zA-Z0-9_]/g)
