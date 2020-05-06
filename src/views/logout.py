@@ -7,13 +7,9 @@ logout = Blueprint('logout', __name__)
 @login_required
 def get_logout():
     from models import OnlineUser
-    token = request.cookies.get('token')
-    record = OnlineUser.verify_token(token)
+
     if current_user is not None:
-        if isinstance(record, int):
-            OnlineUser.delete_record(record)
-        else:
-            OnlineUser.delete_record(record.usrid)
+        OnlineUser.delete_record(current_user.usrid)
         resp = make_response(redirect('/login_register'))
         resp.delete_cookie('token')
         logout_user()
