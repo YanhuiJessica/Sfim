@@ -2,7 +2,7 @@ import os
 
 mysql_host = os.environ.get("DB_HOST", default="localhost")
 mysql_user = os.environ.get("DB_USER", default="root")
-mysql_password = os.environ.get("DB_PSW", default="test4321")
+mysql_password = os.environ.get("DB_PSW", default="plz_change_me")
 mysql_schema = os.environ.get("DB_SCHEMA", default="sfim")
 
 token_expired = float(os.environ.get("TOKEN_EXPIRED", default=600))
@@ -16,9 +16,9 @@ verify_available_time_in_second = os.environ.get("VERIFY_AVAILABLE", default=864
 # 单个验证链接的有效时间为 10 分钟
 link_available_time_in_second = os.environ.get("LINK_AVAILABLE", default=600)
 
-csrf_key = os.environ.get("CSRF_KEY", default="3a81a2312e3f449dc7b925b95f0550c2-f8faf5ef-ea8b471d")
+csrf_key = os.environ.get("CSRF_KEY", default="plz_change_me")
 
-domain_name = os.environ.get("SFIM_DOMAIN_NAME", default="www.sfim.com.cn")
+domain_name = os.environ.get("SFIM_DOMAIN_NAME", default="sfim.tools")
 
 allowed_file_list = tuple(os.environ.get("ALLOWED_SUFFIX", default="\
 'image/jpeg', 'image/png','application/pdf', 'image/bmp','image/gif', \
@@ -29,6 +29,6 @@ allowed_file_list = tuple(os.environ.get("ALLOWED_SUFFIX", default="\
  'application/vnd.ms-powerpoint', \
  'application/vnd.openxmlformats-officedocument.presentationml.presentation'").replace("'", "").replace(" ", "").split(','))
 
-api_key = os.environ.get("MAILGUN_API_KEY", default="key-1670ec1054587094aa967ece6fcb2b53")
-sy_private_key = os.environ.get('SY_PRIVATE_KEY', default='5e49835ca1e8073180d51b7725622f04270f62950a499f18946fafceef8efb07')
-sy_public_key = os.environ.get('SY_PUBLIC_KEY', default='5e49835ca1e8073180d51b7725622f04270f62950a499f18946fafceef8efb07')
+api_key = os.environ.get("MAILGUN_API_KEY", default="plz_change_me")
+sy_private_key = os.environ.get('SY_PRIVATE_KEY', default='plz_change_me')
+sy_public_key = os.environ.get('SY_PUBLIC_KEY', default='plz_change_me')
